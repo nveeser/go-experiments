@@ -312,6 +312,32 @@ func Reduce2[Sum, K, V any](f func(Sum, K, V) Sum, sum Sum, seq iter.Seq2[K, V])
 	return sum
 }
 
+type ZVal[V any] struct {
+	V  V
+	Ok bool // whether V is present (if not, it will be zero)
+}
+
+func ZipV[V1, V2 any](x iter.Seq[V1], y iter.Seq[V2]) iter.Seq2[ZVal[V1], ZVal[V2]] {
+	return func(yield func(x ZVal[V1], y ZVal[V2]) bool) {
+		next, stop := iter.Pull(y)
+		defer stop()
+		v2, ok2 := next()
+		for v1 := range x {
+			if !yield(ZVal[V1]{v1, true}, ZVal[V2]{v2, ok2}) {
+				return
+			}
+			v2, ok2 = next()
+		}
+		var zv1 V1
+		for ok2 {
+			if !yield(ZVal[V1]{zv1, false}, ZVal[V2]{v2, ok2}) {
+				return
+			}
+			v2, ok2 = next()
+		}
+	}
+}
+
 // A Zipped is a pair of zipped values, one of which may be missing,
 // drawn from two different sequences.
 type Zipped[V1, V2 any] struct {
