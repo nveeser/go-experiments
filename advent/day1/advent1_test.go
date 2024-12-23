@@ -1,24 +1,21 @@
-package advent
+package day1
 
 import (
-	"strconv"
-	"strings"
 	"testing"
-	"unicode"
 )
 
 // ownerproof-4804530-1734150945-08da7ba4c09f
 
 func TestPart1(t *testing.T) {
 	t.Run("small", func(t *testing.T) {
-		left, right := read(t, small)
+		left, right := Read(small)
 		got := Part1(left, right)
 		if got != 11 {
 			t.Errorf("got %d wanted %d", got, 11)
 		}
 	})
 	t.Run("part1", func(t *testing.T) {
-		left, right := read(t, part1)
+		left, right := Read(large)
 		got := Part1(left, right)
 		if got != 1151792 {
 			t.Errorf("got %d wanted %d", got, 1151792)
@@ -28,42 +25,19 @@ func TestPart1(t *testing.T) {
 
 func TestPart2(t *testing.T) {
 	t.Run("small", func(t *testing.T) {
-		left, right := read(t, small)
+		left, right := Read(small)
 		got := Part2(left, right)
 		if got != 31 {
 			t.Errorf("got %d wanted %d", got, 31)
 		}
 	})
 	t.Run("part1", func(t *testing.T) {
-		left, right := read(t, part1)
+		left, right := Read(large)
 		got := Part2(left, right)
 		if got != 21790168 {
 			t.Errorf("got %d wanted %d", got, 21790168)
 		}
 	})
-}
-
-func read(t *testing.T, data string) (l, r []int) {
-	for _, row := range strings.Split(data, "\n") {
-		if strings.TrimFunc(row, unicode.IsSpace) == "" {
-			continue
-		}
-		parts := strings.Fields(row)
-		if len(parts) != 2 {
-			t.Fatalf("Bad Parts: %s", parts)
-		}
-		x, err := strconv.ParseInt(parts[0], 10, 64)
-		if err != nil {
-			t.Fatalf("Error parsing %s: %v", parts[0], err)
-		}
-		y, err := strconv.ParseInt(parts[1], 10, 64)
-		if err != nil {
-			t.Fatalf("Error parsing %s: %v", parts[1], err)
-		}
-		l = append(l, int(x))
-		r = append(r, int(y))
-	}
-	return
 }
 
 const small = `
@@ -75,7 +49,7 @@ const small = `
 3   3
 `
 
-const part1 = `
+const large = `
 58692   56129
 45806   95015
 61519   31093
